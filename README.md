@@ -1,2 +1,1 @@
-# F-rat-niversitesi
-mobile app for figma design uninversity with some features extra 
+I make the code more simpler to write and decrease the code lines from 3000+ line by gpt ,If there is any issues  please contact me !

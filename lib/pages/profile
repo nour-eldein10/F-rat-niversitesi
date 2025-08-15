@@ -1,0 +1,221 @@
+import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+class ProfilePage extends StatefulWidget {
+  const ProfilePage({Key? key}) : super(key: key);
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  int selectedColor = 1;
+  final CarouselController _carouselController = CarouselController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            ),
+            SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).cardColor,
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 3,
+                          color: Colors.black.withOpacity(0.1),
+                          offset: const Offset(0, 1),
+                        )
+                      ],
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 90,
+                            height: 90,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.background,
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: _getBorderColor(),
+                                width: 2,
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(2),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(50),
+                                child: Image.asset(
+                                  'assets/images/profile.jpg',
+                                  fit: BoxFit.fitWidth,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Nour Eldein',
+                                  style: Theme.of(context).textTheme.headlineSmall,
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  'nour@college.com',
+                                  style: Theme.of(context).textTheme.labelMedium,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Column(
+                              children: [
+                                const Text('Border Color'),
+                                const SizedBox(height: 5),
+                                Container(
+                                  width: 57.88,
+                                  height: 30,
+                                  child: CarouselSlider(
+                                    items: [1, 2, 3].map((color) {
+                                      return InkWell(
+                                        onTap: () => setState(() => selectedColor = color),
+                                        child: Container(
+                                          width: 200,
+                                          height: 200,
+                                          decoration: BoxDecoration(
+                                            color: _getColor(color),
+                                            shape: BoxShape.circle,
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                    carouselController: _carouselController,
+                                    options: CarouselOptions(
+                                      initialPage: 1,
+                                      viewportFraction: 0.34,
+                                      enlargeCenterPage: true,
+                                      enableInfiniteScroll: true,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  _buildSectionHeader('Account'),
+                  _buildMenuItem(Icons.account_circle_outlined, 'Edit Profile'),
+                  _buildMenuItem(Icons.password, 'Change Password'),
+                  
+                  _buildSectionHeader('Academics'),
+                  _buildMenuItem(FontAwesomeIcons.book, 'My Courses'),
+                  _buildMenuItem(Icons.shelves, 'Class Schedule'),
+                  _buildMenuItem(Icons.reset_tv, 'Register for Courses'),
+                  _buildMenuItem(FontAwesomeIcons.grimace, 'View Grades'),
+                  
+                  _buildSectionHeader('Finance & Services'),
+                  _buildMenuItem(Icons.payments, 'Pay Fees'),
+                  _buildMenuItem(FontAwesomeIcons.asterisk, 'Financial Aid Status'),
+                  
+                  _buildSectionHeader('Communication'),
+                  _buildMenuItem(Icons.move_to_inbox, 'Inbox'),
+                  _buildMenuItem(Icons.announcement, 'Announcements'),
+                  
+                  _buildSectionHeader('Activities & Work'),
+                  _buildMenuItem(Icons.announcement, 'Career Portal'),
+                  _buildMenuItem(Icons.event_rounded, 'Clubs & Events'),
+                  
+                  _buildSectionHeader('General'),
+                  _buildMenuItem(Icons.settings, 'Settings'),
+                  _buildMenuItem(Icons.contact_support, 'Support'),
+                  _buildMenuItem(Icons.logout, 'Logout'),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 0, 0),
+      child: Text(
+        title,
+        style: Theme.of(context).textTheme.labelLarge,
+      ),
+    );
+  }
+
+  Widget _buildMenuItem(IconData icon, String title) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+      child: Container(
+        height: 60,
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 5,
+              color: Colors.black.withOpacity(0.1),
+              offset: const Offset(0, 2),
+            )
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Row(
+            children: [
+              Icon(icon, color: Theme.of(context).hintColor),
+              const SizedBox(width: 12),
+              Expanded(child: Text(title, style: Theme.of(context).textTheme.bodyLarge)),
+              Icon(Icons.arrow_forward_ios, size: 18, color: Theme.of(context).hintColor),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Color _getBorderColor() {
+    switch (selectedColor) {
+      case 1: return Colors.orange;
+      case 2: return Colors.blue;
+      case 3: return Colors.green;
+      default: return Colors.transparent;
+    }
+  }
+
+  Color _getColor(int color) {
+    switch (color) {
+      case 1: return Colors.orange;
+      case 2: return Colors.blue;
+      case 3: return Colors.green;
+      default: return Colors.transparent;
+    }
+  }
+}

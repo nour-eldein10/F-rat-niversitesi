@@ -1,1 +1,103 @@
 
+import 'package:flutter/material.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({Key? key}) : super(key: key);
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        children: [
+          Image.asset('assets/images/splash_image.png'),
+          Expanded(
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.red, Colors.redAccent],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: PageView(
+                      controller: _pageController,
+                      onPageChanged: (index) => setState(() => _currentPage = index),
+                      children: [
+                        _buildPage('Welcome to Firat University', 'Lorem ipsum dolor sit amet'),
+                        _buildPage('Discover Features', 'Explore all the features'),
+                        _buildPage('Get Started', 'Start your journey with us'),
+                      ],
+                    ),
+                  ),
+                  SmoothPageIndicator(
+                    controller: _pageController,
+                    count: 3,
+                    effect: const ExpandingDotsEffect(
+                      activeDotColor: Colors.white,
+                      dotColor: Colors.white54,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPage(String title, String subtitle) {
+    return Padding(
+      padding: const EdgeInsets.all(18),
+      child: Column(
+        children: [
+          const SizedBox(height: 30),
+          Text(title, 
+            style: const TextStyle(color: Colors.white, fontSize: 34)),
+          const SizedBox(height: 30),
+          Text(subtitle, 
+            style: const TextStyle(color: Colors.white, fontSize: 18)),
+          const Spacer(),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: ElevatedButton(
+              onPressed: () {
+                if (_currentPage < 2) {
+                  _pageController.nextPage(
+                    duration: const Duration(milliseconds: 500),
+                    curve: Curves.ease,
+                  );
+                } else {
+                  // Navigate to home
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.horizontal(
+                    left: Radius.circular(24),
+                    right: Radius.circular(0)),
+                ),
+              ),
+              child: const Text('Explore', 
+                style: TextStyle(color: Colors.grey)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

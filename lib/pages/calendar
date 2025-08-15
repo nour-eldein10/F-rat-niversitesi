@@ -1,0 +1,106 @@
+import 'package:flutter/material.dart';
+import 'package:badges/badges.dart' as badges;
+
+class CalendarPage extends StatefulWidget {
+  const CalendarPage({Key? key}) : super(key: key);
+
+  @override
+  State<CalendarPage> createState() => _CalendarPageState();
+}
+
+class _CalendarPageState extends State<CalendarPage> with TickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        body: NestedScrollView(
+          headerSliverBuilder: (context, _) => [
+            SliverAppBar(
+              title: const Text('Calendar'),
+              actions: [
+                badges.Badge(
+                  badgeContent: const Text('1', style: TextStyle(color: Colors.white)),
+                  child: const Icon(Icons.chat_bubble_outline),
+                ),
+              ],
+              bottom: TabBar(
+                controller: _tabController,
+                tabs: const [
+                  Tab(text: 'Month'),
+                  Tab(text: 'Week'),
+                ],
+              ),
+            ),
+          ],
+          body: TabBarView(
+            controller: _tabController,
+            children: [
+              _buildCalendarView(false),
+              _buildCalendarView(true),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCalendarView(bool isWeekView) {
+    return Column(
+      children: [
+        Expanded(
+          child: TableCalendar(
+            firstDay: DateTime.utc(2010, 10, 16),
+            lastDay: DateTime.utc(2030, 3, 14),
+            focusedDay: DateTime.now(),
+            calendarFormat: isWeekView ? CalendarFormat.week : CalendarFormat.month,
+          ),
+        ),
+        _buildTaskSection('Coming Up'),
+        _buildTaskSection('Past Due'),
+      ],
+    );
+  }
+
+  Widget _buildTaskSection(String title) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 0, 0),
+          child: Text(title, style: Theme.of(context).textTheme.labelMedium),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+          child: Card(
+            child: ListTile(
+              title: const Text('Task College'),
+              subtitle: Row(
+                children: [
+                  Chip(label: const Text('2:20pm'), backgroundColor: Colors.red),
+                  const SizedBox(width: 8),
+                  const Text('Wed, 03/08/2022'),
+                ],
+              ),
+              trailing: Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                child: const Icon(Icons.add_photo_alternate_outlined),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
